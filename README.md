@@ -27,13 +27,12 @@ cargo make --makefile task.toml sqs-receive <ループ回数> <プロファイ�
 
 ```
 cargo make --makefile task.toml kinesis-get-shard-iterator <stream-name> <starting-sequence-number> <profile>
+```
 
+- 2.Kinesis の Iterator から Records を取得するタスク
 
-- 2.Kinesis の Iterator から Recordsを取得するタスク
 ```
 
 cargo make --makefile task.toml kinesis-get-records <iterator> <profile>
-
-```
 
 ```
