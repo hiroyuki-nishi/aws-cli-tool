@@ -1,0 +1,61 @@
+[tasks.hello]
+script = [
+'''
+#!/usr/bin/env bash
+echo Hello, World!
+'''
+]
+
+# s3
+[tasks.s3-ls]
+script = [
+'''
+#!/usr/bin/env bash
+aws s3 ls --profile $1
+'''
+]
+
+# sqs
+[tasks.sqs-receive]
+script = [
+'''
+echo "-----------------START-------------------"
+
+ROOP=$1
+PROFILE=$2
+URL=$3
+
+echo "profile:" $PROFILE
+echo "url:" $URL
+
+
+cnt=0
+
+while [ $cnt -lt $ROOP ];
+do
+  RESULT=`aws sqs receive-message --queue-url $URL --max-number-of-message "10" --profile $PROFILE --visibility-timeout 60`
+  echo $RESULT >> ./sqs-out.txt
+  cnt=$(( cnt + 1 ))
+  echo $cnt
+done
+echo "-----------------END-------------------"
+'''
+]
+
+
+# kinesis
+[tasks.kinesis-get-shard-iterator]
+script = [
+'''
+#!/usr/bin/env bash
+aws kinesis get-shard-iterator --stream-name $1 --shard-id shardId-000000000000 --shard-iterator-type AT_SEQUENCE_NUMBER --starting-sequence-number $2 --profile $3
+'''
+]
+
+[tasks.kinesis-get-records]
+script = [
+'''
+#!/usr/bin/env bash
+aws kinesis get-records --shard-iterator $1 --profile $2 | jq .Records[0].Data | base64 --decode
+'''
+]

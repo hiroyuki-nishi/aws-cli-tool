@@ -1,9 +1,39 @@
 # aws-cli-tool
 
-### 利用方法
+### Requirements
 
-- SQS からキューを取得するスクリプト
+- cargo
+- cargo-make
+  https://github.com/sagiegurari/cargo-make
+- jq
+
+### Installation
 
 ```
-sh sqs.sh <取得回数> <プロファイル> <queueのURL>
+curl https://sh.rustup.rs -sSf | sh
+cargo install --force cargo-make
+
+```
+
+### 利用方法
+
+- SQS からキューを再帰的に取得するタスク
+
+```
+cargo make --makefile task.toml sqs-receive <ループ回数> <プロファイル> <QueueのURL>
+```
+
+- 1.Kinesis の SequenceNumber から Iterator を取得するタスク
+
+```
+cargo make --makefile task.toml kinesis-get-shard-iterator <stream-name> <starting-sequence-number> <profile>
+
+
+- 2.Kinesis の Iterator から Recordsを取得するタスク
+```
+
+cargo make --makefile task.toml kinesis-get-records <iterator> <profile>
+
+```
+
 ```
