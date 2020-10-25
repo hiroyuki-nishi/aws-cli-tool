@@ -1,0 +1,54 @@
+# sqs
+[tasks.sqs-receive]
+script = [
+'''
+echo "-----------------START-------------------"
+
+ROOP=$1
+URL=$2
+PROFILE=$3
+
+echo "roop:" $ROOP
+echo "url:" $URL
+echo "profile:" $PROFILE
+
+
+cnt=0
+
+while [ $cnt -lt $ROOP ];
+do
+  RESULT=`aws sqs receive-message --queue-url $URL --max-number-of-message "10" --profile $PROFILE --visibility-timeout 60`
+  echo $RESULT >> ./sqs-out.txt
+  cnt=$(( cnt + 1 ))
+  echo $cnt
+done
+echo "-----------------END-------------------"
+'''
+]
+
+[tasks.sqs-send-message]
+script = [
+'''
+echo "-----------------START-------------------"
+
+ROOP=$1
+URL=$2
+BODY=$3
+PROFILE=$4
+
+echo "roop:" $ROOP
+echo "url:" $URL
+echo "body:" $BODY
+echo "profile:" $PROFILE
+
+cnt=0
+
+while [ $cnt -lt $ROOP ];
+do
+  aws sqs send-message --queue-url $URL --message-body "${BODY}" --profile $PROFILE
+  cnt=$(( cnt + 1 ))
+  echo $cnt
+done
+echo "-----------------END-------------------"
+'''
+]
