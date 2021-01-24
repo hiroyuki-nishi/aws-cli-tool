@@ -1,11 +1,3 @@
-[tasks.hello]
-script = [
-'''
-#!/usr/bin/env bash
-echo Hello, World!
-'''
-]
-
 # kinesis
 [tasks.kinesis-get-shard-iterator]
 script = [
